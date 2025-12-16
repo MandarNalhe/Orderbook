@@ -4,7 +4,9 @@ import com.project.Exchange.Models.Balance;
 import com.project.Exchange.Models.Order;
 import com.project.Exchange.Models.User;
 import com.project.Exchange.Services.OrderService;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,15 +19,17 @@ import java.util.List;
 
 @Controller
 public class OrderController {
-
-    List<Order> bids = new ArrayList<>();
-    List<Order> asks = new ArrayList<>();
-
-    User user1 = new User(1,new Balance());
-    User user2 = new User(2,new Balance());
-
     @Autowired
     OrderService orderService;
+
+    List<Order> bids;
+    List<Order> asks;
+    @PostConstruct
+    void init(){
+        bids = new ArrayList<>();
+        asks = new ArrayList<>();
+    }
+
     @PostMapping("/order")
     public ResponseEntity<String> orderController(@RequestBody Order order ){
         try{

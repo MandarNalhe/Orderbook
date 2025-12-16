@@ -1,8 +1,10 @@
 package com.project.Exchange.Services;
 
+import com.project.Exchange.DAO.Users;
 import com.project.Exchange.Models.Balance;
 import com.project.Exchange.Models.Order;
 import com.project.Exchange.Models.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -10,21 +12,23 @@ import java.util.List;
 
 @Service
 public class OrderService {
+    @Autowired
+    Users users;
     public int handle(Order order, List<Order> bids, List<Order> asks){
 
         int remaining = fillupOrder(order,bids,asks);
         if(remaining != 0){
-            bids.add(new Order(order.getUser(), order.getPrice(), remaining, order.getType()));
+            bids.add(new Order(order.getUserID(), order.getPrice(), remaining, order.getType()));
             bids.sort((a,b)-> Integer.compare(b.getPrice(),a.getPrice()));
         }
         else{
-            asks.add(new Order(order.getUser(), order.getPrice(), remaining, order.getType()));
+            asks.add(new Order(order.getUserID(), order.getPrice(), remaining, order.getType()));
             asks.sort(Comparator.comparingInt(Order::getPrice));
         }
         return remaining;
     }
 
-    public static int fillupOrder(Order order,List<Order>bids,List<Order>asks){
+    public int fillupOrder(Order order, List<Order> bids, List<Order> asks){
         int remain = order.getQuantity();
         if(order.getType().equals("bid")) {
             for (Order order1 : asks) {
@@ -33,11 +37,11 @@ public class OrderService {
                 }
                 if (remain <= order1.getQuantity()) {
                     order1.setQuantity(order1.getQuantity() - remain);
-                    flipOrder(order1.getUser(), order.getUser(), remain,order1.getPrice());
+                    flipOrder(order1.getUserID(), order.getUserID(), remain,order1.getPrice());
                     return 0;
                 } else {
                     remain -= order1.getQuantity();
-                    flipOrder(order1.getUser(), order.getUser(), remain, order1.getPrice());
+                    flipOrder(order1.getUserID(), order.getUserID(), remain, order1.getPrice());
                 }
             }
         }
@@ -47,18 +51,27 @@ public class OrderService {
             }
             if(remain <= order1.getQuantity()){
                 order1.setQuantity(order1.getQuantity()-remain);
-                flipOrder(order.getUser(),order1.getUser(),remain, order1.getPrice());
+                flipOrder(order.getUserID(),order1.getUserID(),remain, order1.getPrice());
                 return 0;
             }
             else{
                 remain -= order1.getQuantity();
-                flipOrder(order.getUser(),order1.getUser(),remain, order1.getPrice());
+                flipOrder(order.getUserID(),order1.getUserID(),remain, order1.getPrice());
             }
         }
         return remain;
     }
 
-    private static void flipOrder(User user, User user1, int remain, int price) {
+    private void flipOrder(int userID, int userID2, int remain, int price) {
+        User user = new User(), user1 = new User();
+        for(User u : users.getUsers()){
+            if(u.getUserID() == userID){
+                user = u;
+            }
+            if(u.getUserID() == userID2){
+                user1 = u;
+            }
+        }
         user.getBalance().setAmount(user.getBalance().getAmount() + (remain*price));
         user.getBalance().setTicker(user.getBalance().getTicker()-remain);
         user1.getBalance().setAmount(user1.getBalance().getAmount() - (remain*price));

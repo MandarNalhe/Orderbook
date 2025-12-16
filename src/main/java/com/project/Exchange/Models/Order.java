@@ -2,19 +2,17 @@ package com.project.Exchange.Models;
 
 public class Order {
 
-    public User getUser() {
-        return user;
-    }
 
-    public Order(User user, int price, int quantity, String type) {
-        this.user = user;
+
+    public Order(int userID, int price, int quantity, String type) {
+        this.userID = userID;
         this.price = price;
         this.quantity = quantity;
         this.type = type;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(int userID) {
+        this.userID = userID;
     }
 
     public int getPrice() {
@@ -41,7 +39,11 @@ public class Order {
         this.type = type;
     }
 
-    private User user;
+    public int getUserID() {
+        return userID;
+    }
+
+    private int userID;
 
     private int price;
 

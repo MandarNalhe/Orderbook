@@ -7,10 +7,6 @@ public class User {
     private int userID;
     private Balance balance;
 
-    public User(int userID, Balance balance) {
-        this.userID = userID;
-        this.balance = balance;
-    }
 
     public int getUserID() {
         return userID;
@@ -27,4 +23,5 @@ public class User {
     public void setBalance(Balance balance) {
         this.balance = balance;
     }
+
 }

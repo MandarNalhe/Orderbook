@@ -1,6 +1,7 @@
 package com.project.Exchange.DAO;
 
 import com.project.Exchange.Models.Balance;
+import com.project.Exchange.Models.Order;
 import com.project.Exchange.Models.User;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,6 @@ public class Users {
         User user1 = new User();
         user1.setUserID(2);
         user1.setBalance(new Balance());
-
         users.add(user1);
         users.add(user);
     }

@@ -8,10 +8,9 @@ import java.util.List;
 
 @Service
 public class DepthService {
+    List<Order> depth = new ArrayList<>();
 
     public List<Order> handleDepth() {
         return depth;
     }
-
-    List<Order> depth = new ArrayList<>();
 }

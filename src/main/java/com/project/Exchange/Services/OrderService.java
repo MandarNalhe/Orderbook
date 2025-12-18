@@ -16,6 +16,9 @@ public class OrderService {
 
     @Autowired
     DepthService depthService;
+
+    @Autowired
+    MarketService marketService;
     public int handle(Order order, List<Order> bids, List<Order> asks){
 
         int remaining = fillupOrder(order,bids,asks);
@@ -78,6 +81,9 @@ public class OrderService {
                 user1 = u;
             }
         }
+
+        marketService.setPrice(price);
+
         user.getBalance().setAmount(user.getBalance().getAmount() + (remain*price));
         user.getBalance().setTicker(user.getBalance().getTicker()-remain);
         user1.getBalance().setAmount(user1.getBalance().getAmount() - (remain*price));
